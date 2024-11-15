@@ -2,8 +2,6 @@ import { User, Thought } from "../models/index.js";
 import { Request, Response } from "express";
 
 
-
-
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.findOne({_id: req.params.id}, {
@@ -35,17 +33,21 @@ export const createUser = async (req: Request, res: Response) => {
 };
   
 export const addFriend = async (req: Request, res: Response) => {
-try {
+  try {
     const user = await User.findOne({_id: req.params.id});
     if (user) {
-        user.friends.push(req.params.friendId as any);
+      user.friends.push(req.params.friendId as any);
+      if (user) {
         await user.save();
         res.json({ message: "Friend added" });
+        
+      }
+      await user.save();
     } else {
-        res.status(404).json({ message: 'No user with that ID' });
+      res.status(404).json({ message: 'No user with that ID' });
     }
     return res.json({ message: "Friend added" });
-} catch (error) {
+  } catch (error) {
     return res.status(400).json({ message: 'No user with that ID' });
   }
 };

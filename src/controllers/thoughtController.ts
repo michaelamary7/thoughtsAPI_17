@@ -45,7 +45,6 @@ export const createThought = async (req: Request<{}, {}, ICreateThoughtBody>, re
         message: 'Thought Created, but no user found with that id!' });
     }
 
-
     user.thoughts.push(thought._id as any);
     await user.save();
     return res.json(thought);
@@ -79,7 +78,7 @@ export const deleteThought = async (req: Request, res: Response) => {
     const user = await User.findOne({ _id: thought.userId });
 
     if (user) {
-      user.thoughts = user.thoughts.filter(thoughtId => thoughtId.toString() !== thought._id.toString());
+      user.thoughts = user.thoughts.filter((thoughtId: { toString: () => any; }) => thoughtId.toString() !== thought._id.toString());
       await user.save();
     }
 
